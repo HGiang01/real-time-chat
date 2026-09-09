@@ -135,7 +135,7 @@ public class AuthServiceTest {
         String refreshToken = "validRefreshToken";
         UUID userId = activeUser.getId();
 
-        when(jwtService.isValidToken(refreshToken)).thenReturn(true);
+        when(jwtService.isValidRefreshToken(refreshToken)).thenReturn(true);
         when(jwtService.extractUserId(refreshToken)).thenReturn(userId.toString());
         when(userService.findById(userId.toString())).thenReturn(Optional.of(activeUser));
         when(jwtService.generateAccessToken(activeUser)).thenReturn("newAccessToken");

@@ -21,16 +21,16 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    public static final String[] PUBLIC_ENDPOINTS = {"/auth/signup", "/auth/login", "/auth/verify", "/auth/refresh"};
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final JwtFilter jwtFilter;
-    String[] publicEndpoints = {"/api/auth/signup", "/api/auth/login", "/api/auth/verify", "/api/auth/refresh"};
     @Value("${app.frontend.url}") private String frontendUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> auth.requestMatchers(publicEndpoints)
+            .authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_ENDPOINTS)
                                                .permitAll()
                                                .anyRequest()
                                                .authenticated())

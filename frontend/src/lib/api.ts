@@ -45,12 +45,12 @@ api.interceptors.response.use(
 
     console.debug("err object", err)
 
-    const PUBLIC_PATHS = ["/auth/login", "/auth/signup", "/auth/verify"]
+    const PUBLIC_ENDPOINTS = ["/auth/login", "/auth/signup", "/auth/verify"]
 
-    const isPublicRequest = PUBLIC_PATHS.some((path) =>
+    const isPublicRequest = PUBLIC_ENDPOINTS.some((path) =>
       err.config.url.includes(path)
     )
-
+    
     if (
       err.response?.status === 401 &&
       !isPublicRequest &&

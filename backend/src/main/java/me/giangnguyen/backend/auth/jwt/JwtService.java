@@ -65,25 +65,21 @@ public class JwtService {
         return extractAllClaims(token).getExpiration().toInstant().atOffset(ZoneOffset.UTC);
     }
 
-    public boolean isValidToken(String token) {
-        try {
-            Claims claims = extractAllClaims(token);
+    public boolean isValidAccessToken(String token) throws JwtException {
+        Claims claims = extractAllClaims(token);
 
-            if (!claims.get("type", String.class).equals("refresh")) {
-                return false;
-            }
-
-            if (claims.getExpiration().before(new Date())) {
-                return false;
-            }
-
-            return refreshTokenService.findByRefreshToken(token)
-                                      .filter(rt -> rt.getExpiresAt().isAfter(OffsetDateTime.now()) && !rt.isRevoke())
-                                      .isPresent();
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
+        return "access".equals(claims.get("type"));
     }
 
+    public boolean isValidRefreshToken(String token) throws JwtException {
+        Claims claims = extractAllClaims(token);
 
+        if (!"refresh".equals(claims.get("type"))) {
+            return false;
+        }
+
+        return refreshTokenService.findByRefreshToken(token)
+                                  .filter(rt -> rt.getExpiresAt().isAfter(OffsetDateTime.now()) && !rt.isRevoke())
+                                  .isPresent();
+    }
 }

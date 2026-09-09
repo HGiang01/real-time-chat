@@ -156,7 +156,7 @@ public class AuthService {
     }
 
     public TokenResponse refresh(String refreshToken) {
-        if (!jwtService.isValidToken(refreshToken)) {
+        if (!jwtService.isValidRefreshToken(refreshToken)) {
             throw new InvalidRefreshTokenException("Invalid refresh token");
         }
 
