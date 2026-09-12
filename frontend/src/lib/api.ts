@@ -45,7 +45,7 @@ api.interceptors.response.use(
 
     console.debug("err object", err)
 
-    const PUBLIC_ENDPOINTS = ["/auth/login", "/auth/signup", "/auth/verify"]
+    const PUBLIC_ENDPOINTS = ["/auth/login", "/auth/signup", "/auth/verify", "/auth/refresh"]
 
     const isPublicRequest = PUBLIC_ENDPOINTS.some((path) =>
       err.config.url.includes(path)
@@ -77,11 +77,12 @@ api.interceptors.response.use(
 
         localStorage.setItem("access_token", newAccessToken)
         api.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
 
+        isRefreshing = false
         processQueue(null, newAccessToken)
-        
+
         // Recall api
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
         return api(originalRequest)
       } catch (refreshError) {
         processQueue(refreshError, null)
