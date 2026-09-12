@@ -1,11 +1,11 @@
 package me.giangnguyen.backend.common.config;
 
-import lombok.RequiredArgsConstructor;
-import me.giangnguyen.backend.auth.jwt.JwtFilter;
-import me.giangnguyen.backend.auth.oauth2.OAuth2LoginSuccessHandler;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,27 +15,38 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+import me.giangnguyen.backend.auth.jwt.JwtFilter;
+import me.giangnguyen.backend.auth.oauth2.OAuth2LoginSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    public static final String[] PUBLIC_ENDPOINTS = {"/auth/signup", "/auth/login", "/auth/verify", "/auth/refresh"};
+    public static final String[] PUBLIC_ENDPOINTS = {"/api/auth/signup", "/api/auth/login", "/api/auth/verify", "/api/auth/refresh"};
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final JwtFilter jwtFilter;
     @Value("${app.frontend.url}") private String frontendUrl;
 
     @Bean
+    @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        http.securityMatcher("/api/**")
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_ENDPOINTS)
                                                .permitAll()
                                                .anyRequest()
                                                .authenticated())
-            .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2LoginSuccessHandler))
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain webFilterChain(HttpSecurity http) {
+        http.securityMatcher("/oauth2/**", "/login/**")
+            .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2LoginSuccessHandler));
         return http.build();
     }
 

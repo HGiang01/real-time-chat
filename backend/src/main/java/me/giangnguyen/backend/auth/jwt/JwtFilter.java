@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 import static me.giangnguyen.backend.common.config.SecurityConfig.PUBLIC_ENDPOINTS;
 
@@ -49,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 if (jwtService.isValidAccessToken(accessToken)) {
                     Claims claims = jwtService.extractAllClaims(accessToken);
-                    String userId = claims.getSubject();
+                    UUID userId = UUID.fromString(claims.getSubject());
 
                     Optional<User> user = userService.findById(userId);
                     if (user.isPresent()) {
