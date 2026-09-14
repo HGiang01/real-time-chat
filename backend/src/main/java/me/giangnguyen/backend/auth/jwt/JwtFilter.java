@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import me.giangnguyen.backend.user.User;
 import me.giangnguyen.backend.user.UserService;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,11 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             String authHeader = request.getHeader("Authorization");
 
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            if (authHeader == null) {
+                throw new InsufficientAuthenticationException("Authorization header is missing");
+            }
+
+            if (authHeader.startsWith("Bearer ")) {
                 String accessToken = authHeader.substring(7);
 
                 if (jwtService.isValidAccessToken(accessToken)) {
