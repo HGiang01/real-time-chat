@@ -3,6 +3,9 @@ package me.giangnguyen.backend.user;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.giangnguyen.backend.common.util.ImageUtils;
+import me.giangnguyen.backend.user.dto.GetMeResponse;
+import me.giangnguyen.backend.user.dto.UpdateProfileRequest;
+import me.giangnguyen.backend.user.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -46,9 +49,47 @@ public class UserService {
         repository.deleteByEmailAndNotActive(email);
     }
 
+    public GetMeResponse getMe(UUID userId) {
+        Optional<User> user = repository.findById(userId);
+
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        return new GetMeResponse(user.get().getUsername(),
+                                 user.get().getBio(),
+                                 imageUtils.getThumbnailUrl(user.get().getAvatarUrl()));
+    }
+
     @Transactional
-    public void changePassword(UUID id, String newHashPassword) {
-        repository.changePassword(id, newHashPassword);
+    public GetMeResponse updateProfile(UUID userId, UpdateProfileRequest request) {
+        Optional<User> user = repository.findById(userId);
+
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        if (request.username() != null) {
+            user.get().setUsername(request.username());
+        }
+
+        if (request.bio() != null) {
+            user.get().setBio(request.bio());
+        }
+
+        if (request.avatar() != null) {
+            String oldAvatarUrl = user.get().getAvatarUrl();
+            if (oldAvatarUrl != null) {
+                imageUtils.deleteImage(user.get().getAvatarUrl());
+            }
+
+            String newAvatarUrl = imageUtils.upload(request.avatar());
+            user.get().setAvatarUrl(newAvatarUrl);
+        }
+
+        return new GetMeResponse(user.get().getUsername(),
+                                 user.get().getBio(),
+                                 imageUtils.getThumbnailUrl(user.get().getAvatarUrl()));
     }
 }
 

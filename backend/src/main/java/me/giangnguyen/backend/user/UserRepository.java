@@ -25,10 +25,4 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             delete from users where email = :email and is_active = false;
             """, nativeQuery = true)
     void deleteByEmailAndNotActive(@Param("email") String email);
-
-    @Modifying
-    @Query(value = """
-            update users set hash_password = :newHashPassword where id = :userId;
-            """, nativeQuery = true)
-    void changePassword(@Param("userId") UUID userId, @Param("newHashPassword") String newHashPassword);
 }

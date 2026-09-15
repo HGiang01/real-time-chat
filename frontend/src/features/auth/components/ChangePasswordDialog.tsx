@@ -22,7 +22,12 @@ import {
 } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 
-function ChangePasswordForm({ className }: { className?: string }) {
+interface ChangePasswordDiaglogProps {
+  open: boolean
+  ,onOpenChange: (open: boolean) => void
+}
+
+function ChangePasswordDiaglog({ className }: { className?: string }) {
   const { control, handleSubmit } = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(changePasswordSchema),
   })
@@ -193,4 +198,4 @@ function ChangePasswordForm({ className }: { className?: string }) {
   )
 }
 
-export { ChangePasswordForm }
+export { ChangePasswordDiaglog }

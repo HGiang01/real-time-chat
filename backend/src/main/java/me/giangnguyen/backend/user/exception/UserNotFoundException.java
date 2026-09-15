@@ -1,7 +1,10 @@
 package me.giangnguyen.backend.user.exception;
 
-public class UserNotFoundException extends RuntimeException {
+import me.giangnguyen.backend.common.exception.ApplicationException;
+import org.springframework.http.HttpStatus;
+
+public class UserNotFoundException extends ApplicationException {
     public UserNotFoundException(String message) {
-        super(message);
+        super(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", message);
     }
 }
