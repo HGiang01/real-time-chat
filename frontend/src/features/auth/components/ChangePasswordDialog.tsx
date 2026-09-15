@@ -14,20 +14,25 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group"
-import {
-  IconEye,
-  IconEyeOff,
-  IconLock,
-  IconArrowRight,
-} from "@tabler/icons-react"
+import { IconEye, IconEyeOff, IconLock } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog.tsx"
 
-interface ChangePasswordDiaglogProps {
+interface ChangePasswordDialogProps {
   open: boolean
-  ,onOpenChange: (open: boolean) => void
+  onOpenChange: (open: boolean) => void
 }
 
-function ChangePasswordDiaglog({ className }: { className?: string }) {
+function ChangePasswordDialog({
+  open,
+  onOpenChange,
+}: ChangePasswordDialogProps) {
   const { control, handleSubmit } = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(changePasswordSchema),
   })
@@ -69,133 +74,150 @@ function ChangePasswordDiaglog({ className }: { className?: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={className}>
-      <FieldGroup>
-        <Controller
-          name="currentPassword"
-          control={control}
-          render={({ field, fieldState }) => (
-            <Field>
-              <FieldLabel htmlFor={field.name}>Current Password</FieldLabel>
+    <Dialog open={open} onOpenChange={onOpenChange} >
+      <DialogContent className="max-w-[384px]!">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogHeader>
+            <DialogTitle>Change Password</DialogTitle>
+          </DialogHeader>
+          <FieldGroup className="mt-4 py-4">
+            <Controller
+              name="currentPassword"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel htmlFor={field.name}>Current password</FieldLabel>
 
-              <InputGroup className="h-12 p-3">
-                <InputGroupInput
-                  {...field}
-                  id={field.name}
-                  type={isCurrentPasswordVisible ? "text" : "password"}
-                  placeholder="●●●●●●●●"
-                  required
-                />
+                  <InputGroup>
+                    <InputGroupInput
+                      {...field}
+                      id={field.name}
+                      type={isCurrentPasswordVisible ? "text" : "password"}
+                      placeholder="●●●●●●●●"
+                      required
+                    />
 
-                <InputGroupAddon>
-                  <IconLock />
-                </InputGroupAddon>
+                    <InputGroupAddon>
+                      <IconLock />
+                    </InputGroupAddon>
 
-                <InputGroupAddon align="inline-end">
-                  <Button
-                    variant="ghost"
-                    onClick={ToggleCurrentPasswordVisibility}
-                  >
-                    {isCurrentPasswordVisible ? <IconEye /> : <IconEyeOff />}
-                  </Button>
-                </InputGroupAddon>
-              </InputGroup>
+                    <InputGroupAddon align="inline-end">
+                      <Button
+                        variant="ghost"
+                        onClick={ToggleCurrentPasswordVisibility}
+                      >
+                        {isCurrentPasswordVisible ? (
+                          <IconEye />
+                        ) : (
+                          <IconEyeOff />
+                        )}
+                      </Button>
+                    </InputGroupAddon>
+                  </InputGroup>
 
-              {fieldState.error && (
-                <FieldError>{fieldState.error.message}</FieldError>
+                  {fieldState.error && (
+                    <FieldError>{fieldState.error.message}</FieldError>
+                  )}
+                </Field>
               )}
-            </Field>
-          )}
-        />
+            />
 
-        <Controller
-          name="newPassword"
-          control={control}
-          render={({ field, fieldState }) => (
-            <Field>
-              <FieldLabel htmlFor={field.name}>New Password</FieldLabel>
+            <Controller
+              name="newPassword"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel htmlFor={field.name}>New password</FieldLabel>
 
-              <InputGroup className="h-12 p-3">
-                <InputGroupInput
-                  {...field}
-                  id={field.name}
-                  type={isNewPasswordVisible ? "text" : "password"}
-                  placeholder="●●●●●●●●"
-                  required
-                />
+                  <InputGroup>
+                    <InputGroupInput
+                      {...field}
+                      id={field.name}
+                      type={isNewPasswordVisible ? "text" : "password"}
+                      placeholder="●●●●●●●●"
+                      required
+                    />
 
-                <InputGroupAddon>
-                  <IconLock />
-                </InputGroupAddon>
+                    <InputGroupAddon>
+                      <IconLock />
+                    </InputGroupAddon>
 
-                <InputGroupAddon align="inline-end">
-                  <Button variant="ghost" onClick={ToggleNewPasswordVisibility}>
-                    {isNewPasswordVisible ? <IconEye /> : <IconEyeOff />}
-                  </Button>
-                </InputGroupAddon>
-              </InputGroup>
+                    <InputGroupAddon align="inline-end">
+                      <Button
+                        variant="ghost"
+                        onClick={ToggleNewPasswordVisibility}
+                      >
+                        {isNewPasswordVisible ? <IconEye /> : <IconEyeOff />}
+                      </Button>
+                    </InputGroupAddon>
+                  </InputGroup>
 
-              {fieldState.error && (
-                <FieldError>{fieldState.error.message}</FieldError>
+                  {fieldState.error && (
+                    <FieldError>{fieldState.error.message}</FieldError>
+                  )}
+                </Field>
               )}
-            </Field>
-          )}
-        />
+            />
 
-        <Controller
-          name="confirmNewPassword"
-          control={control}
-          render={({ field, fieldState }) => (
-            <Field>
-              <FieldLabel htmlFor={field.name}>Confirm New Password</FieldLabel>
+            <Controller
+              name="confirmNewPassword"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field>
+                  <FieldLabel htmlFor={field.name}>
+                    Confirm new password
+                  </FieldLabel>
 
-              <InputGroup className="h-12 p-3">
-                <InputGroupInput
-                  {...field}
-                  id={field.name}
-                  type={isNewConfirmPasswordVisible ? "text" : "password"}
-                  placeholder="●●●●●●●●"
-                  required
-                />
+                  <InputGroup>
+                    <InputGroupInput
+                      {...field}
+                      id={field.name}
+                      type={isNewConfirmPasswordVisible ? "text" : "password"}
+                      placeholder="●●●●●●●●"
+                      required
+                    />
 
-                <InputGroupAddon>
-                  <IconLock />
-                </InputGroupAddon>
+                    <InputGroupAddon>
+                      <IconLock />
+                    </InputGroupAddon>
 
-                <InputGroupAddon align="inline-end">
-                  <Button
-                    variant="ghost"
-                    onClick={ToggleNewConfirmPasswordVisibility}
-                  >
-                    {isNewConfirmPasswordVisible ? <IconEye /> : <IconEyeOff />}
-                  </Button>
-                </InputGroupAddon>
-              </InputGroup>
+                    <InputGroupAddon align="inline-end">
+                      <Button
+                        variant="ghost"
+                        onClick={ToggleNewConfirmPasswordVisibility}
+                      >
+                        {isNewConfirmPasswordVisible ? (
+                          <IconEye />
+                        ) : (
+                          <IconEyeOff />
+                        )}
+                      </Button>
+                    </InputGroupAddon>
+                  </InputGroup>
 
-              {fieldState.error && (
-                <FieldError>{fieldState.error.message}</FieldError>
+                  {fieldState.error && (
+                    <FieldError>{fieldState.error.message}</FieldError>
+                  )}
+                </Field>
               )}
-            </Field>
+            />
+          </FieldGroup>
+
+          <DialogFooter>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Changing password..." : "Change Password"}
+            </Button>
+          </DialogFooter>
+
+          {isError && (
+            <div className="mt-5 text-center text-destructive">
+              {error.response?.data.detail ?? "Login failed. Please try again."}
+            </div>
           )}
-        />
-
-        <Button
-          type="submit"
-          className="h-12 text-[14px] font-bold"
-          disabled={isPending}
-        >
-          {isPending ? "Changing password..." : "Change Password"}
-          <IconArrowRight data-icon="inline-end" />
-        </Button>
-      </FieldGroup>
-
-      {isError && (
-        <div className="mt-5 text-center text-destructive">
-          {error.response?.data.detail ?? "Login failed. Please try again."}
-        </div>
-      )}
-    </form>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }
 
-export { ChangePasswordDiaglog }
+export { ChangePasswordDialog }
