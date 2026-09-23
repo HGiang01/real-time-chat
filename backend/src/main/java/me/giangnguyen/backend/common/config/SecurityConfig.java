@@ -1,7 +1,8 @@
 package me.giangnguyen.backend.common.config;
 
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
+import me.giangnguyen.backend.auth.jwt.JwtFilter;
+import me.giangnguyen.backend.auth.oauth2.OAuth2LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,15 +16,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import lombok.RequiredArgsConstructor;
-import me.giangnguyen.backend.auth.jwt.JwtFilter;
-import me.giangnguyen.backend.auth.oauth2.OAuth2LoginSuccessHandler;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    public static final String[] PUBLIC_ENDPOINTS = {"/api/auth/signup", "/api/auth/login", "/api/auth/verify", "/api/auth/refresh"};
+    public static final String[] PUBLIC_ENDPOINTS = {"/api/auth/signup", "/api/auth/login", "/api/auth/verify", "/api/auth/refresh", "/api/chat"};
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final JwtFilter jwtFilter;
     @Value("${app.frontend.url}") private String frontendUrl;

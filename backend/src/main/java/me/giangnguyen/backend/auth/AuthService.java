@@ -75,16 +75,16 @@ public class AuthService {
         Optional<User> user = userService.findByEmail(request.email());
 
         if (user.isEmpty()) {
-            throw new BadCredentialsException("Invalid credential");
+            throw new BadCredentialsException("Invalid credentials");
         }
 
         if (!user.get().getIsActive()) {
-            throw new BadCredentialsException("Invalid credential");
+            throw new BadCredentialsException("Invalid credentials");
         }
 
         if (user.get().getHashPassword() == null || !passwordEncoder.matches(request.password(),
                                                                              user.get().getHashPassword())) {
-            throw new BadCredentialsException("Invalid credential");
+            throw new BadCredentialsException("Invalid credentials");
         }
 
         String accessToken = jwtService.generateAccessToken(user.get());
@@ -181,7 +181,7 @@ public class AuthService {
 
         if (request.currentPassword() == null || !passwordEncoder.matches(request.currentPassword(),
                                                                           user.get().getHashPassword())) {
-            throw new BadCredentialsException("Invalid credential");
+            throw new BadCredentialsException("Invalid credentials");
         }
 
         String newHashPassword = passwordEncoder.encode(request.newPassword());
