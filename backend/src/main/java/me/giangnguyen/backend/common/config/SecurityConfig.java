@@ -12,17 +12,25 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    public static final String[] PUBLIC_ENDPOINTS = {"/api/auth/signup", "/api/auth/login", "/api/auth/verify", "/api/auth/refresh", "/api/chat"};
+    public static final String[] PUBLIC_ENDPOINTS = {"/api/auth/signup", "/api/auth/login", "/api/auth/verify", "/api/auth/refresh", "/api/chat/ws**"};
+    public static final RequestMatcher PUBLIC_MATCHER = new OrRequestMatcher(Arrays.stream(PUBLIC_ENDPOINTS)
+                                                                                   .map(PathPatternRequestMatcher.withDefaults()::matcher)
+                                                                                   .toArray(RequestMatcher[]::new));
+
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final JwtFilter jwtFilter;
     @Value("${app.frontend.url}") private String frontendUrl;
@@ -33,7 +41,7 @@ public class SecurityConfig {
         http.securityMatcher("/api/**")
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_ENDPOINTS)
+            .authorizeHttpRequests(auth -> auth.requestMatchers(PUBLIC_MATCHER)
                                                .permitAll()
                                                .anyRequest()
                                                .authenticated())
