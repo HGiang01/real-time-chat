@@ -30,6 +30,10 @@ public class UserService {
         return repository.findUserByEmail(email);
     }
 
+    public Optional<User> findActiveUserById(UUID id) {
+        return repository.findByIdAndIsActive(id, true);
+    }
+
     public Optional<User> findByEmailAndActivated(String email) {
         return repository.findUserByEmailAndIsActive(email, true);
     }
@@ -90,6 +94,10 @@ public class UserService {
         return new GetMeResponse(user.get().getUsername(),
                                  user.get().getBio(),
                                  imageUtils.getThumbnailUrl(user.get().getAvatarUrl()));
+    }
+    
+    public void updateUserStatus(UUID userId, UserStatus userStatus) {
+        repository.updateUserStatus(userId, userStatus);
     }
 }
 

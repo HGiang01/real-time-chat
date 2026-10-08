@@ -42,15 +42,17 @@ api.interceptors.response.use(
   (res) => res,
   async (err) => {
     const originalRequest = err.config
-
-    console.debug("err object", err)
-
-    const PUBLIC_ENDPOINTS = ["/auth/login", "/auth/signup", "/auth/verify", "/auth/refresh"]
+    const PUBLIC_ENDPOINTS = [
+      "/auth/login",
+      "/auth/signup",
+      "/auth/verify",
+      "/auth/refresh",
+    ]
 
     const isPublicRequest = PUBLIC_ENDPOINTS.some((path) =>
       err.config.url.includes(path)
     )
-    
+
     if (
       err.response?.status === 401 &&
       !isPublicRequest &&
@@ -87,7 +89,11 @@ api.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null)
         localStorage.removeItem("access_token")
-        window.location.href = "/"
+
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login"
+        }
+
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false

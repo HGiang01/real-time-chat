@@ -13,3 +13,18 @@ export function cn(...inputs: ClassValue[]) {
 export function getCloudinaryImageUrl(publicId: string): string {
   return cloudinary.image(publicId).toURL()
 }
+
+export function extractAvatarFallback(username: string | undefined): string {
+  if (!username) return "null"
+
+  username = username.trim()
+  let result: string = ""
+
+  for (let i = 0; i < username.length; i++) {
+    if (i == 0 || username.charAt(i - 1) == " ") {
+      result = result + username[i]
+    }
+  }
+
+  return result.toUpperCase()
+}

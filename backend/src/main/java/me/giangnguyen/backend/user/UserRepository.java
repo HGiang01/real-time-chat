@@ -25,4 +25,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             delete from users where email = :email and is_active = false;
             """, nativeQuery = true)
     void deleteByEmailAndNotActive(@Param("email") String email);
+
+    @Modifying
+    @Query("update User u set u.status = :userStatus where u.id = :userId")
+    void updateUserStatus(@Param("userId") UUID userId, @Param("userStatus") UserStatus userStatus);
+
+    Optional<User> findByIdAndIsActive(UUID id, Boolean isActive);
 }

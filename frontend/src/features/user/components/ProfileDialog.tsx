@@ -20,28 +20,14 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useUpdateProfile } from "@/features/user/hooks/useUpdateProfile.ts"
 import { AvatarField } from "./AvatarField"
+import { extractAvatarFallback } from "@/lib/utils"
 
 interface ProfileDialogProps {
-  open: boolean
+  isOpen: boolean
   onOpenChange: (open: boolean) => void
 }
 
-function extractAvatarFallback(username: string | undefined): string {
-  if (!username) return "undefined"
-
-  username = username.trim()
-  let result: string = ""
-
-  for (let i = 0; i < username.length; i++) {
-    if (i == 0 || username.charAt(i - 1) == " ") {
-      result = result + username[i]
-    }
-  }
-
-  return result.toUpperCase()
-}
-
-export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
+function ProfileDialog({ isOpen, onOpenChange }: ProfileDialogProps) {
   const user = useUserStore((s) => s.user)
   const inputRef = useRef<HTMLInputElement>(null)
   const [isEditing, setIsEditing] = useState(false)
@@ -86,7 +72,7 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="transition-all duration-300 ease-in-out sm:max-w-sm">
         {!isEditing ? (
           <>
@@ -211,3 +197,5 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
     </Dialog>
   )
 }
+
+export { ProfileDialog }
