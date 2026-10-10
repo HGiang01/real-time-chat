@@ -13,12 +13,12 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group"
 import {
-  IconMail,
-  IconLock,
-  IconEyeOff,
   IconArrowRight,
   IconBrandGoogle,
   IconEye,
+  IconEyeOff,
+  IconLock,
+  IconMail,
 } from "@tabler/icons-react"
 import { Link } from "react-router"
 import { cn } from "@/lib/utils"
@@ -26,7 +26,7 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { type LoginFormValues, loginSchema } from "../schema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useLogin } from "../hooks/useLogin"
+import { useLogin } from "@/features/auth/hooks/auth.queries.ts"
 
 function LoginForm() {
   const { control, handleSubmit } = useForm<LoginFormValues>({

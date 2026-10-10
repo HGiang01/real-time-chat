@@ -17,7 +17,7 @@ public class CookieUtils {
                              .httpOnly(true)
                              .secure(isSecure)
                              .sameSite(sameSite)
-                             .path("/api/auth/refresh")
+                             .path("/api/auth")
                              .maxAge(refreshTokenExpirationMs / 1000)
                              .build()
                              .toString();
@@ -28,7 +28,7 @@ public class CookieUtils {
                              .httpOnly(true)
                              .secure(isSecure)
                              .sameSite(sameSite)
-                             .path("/api/auth/refresh")
+                             .path("/api/auth")
                              .maxAge(0)
                              .build()
                              .toString();

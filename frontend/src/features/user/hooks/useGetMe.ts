@@ -7,6 +7,10 @@ function useGetMe() {
     queryKey: ["me"],
     queryFn: getMeRequest,
     retry: false,
+    retryOnMount: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: 60_000,
   })
 }
 

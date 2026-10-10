@@ -1,7 +1,7 @@
 import { Controller, useForm } from "react-hook-form"
 import { type ChangePasswordFormValues, changePasswordSchema } from "../schema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useChangePassword } from "../hooks/useChangePassword"
+import { useChangePassword } from "@/features/auth/hooks/auth.queries.ts"
 import { useState } from "react"
 import {
   Field,
@@ -25,12 +25,12 @@ import {
 } from "@/components/ui/dialog.tsx"
 
 interface ChangePasswordDialogProps {
-  open: boolean
+  isOpen: boolean
   onOpenChange: (open: boolean) => void
 }
 
 function ChangePasswordDialog({
-  open,
+  isOpen,
   onOpenChange,
 }: ChangePasswordDialogProps) {
   const { control, handleSubmit } = useForm<ChangePasswordFormValues>({
@@ -74,7 +74,7 @@ function ChangePasswordDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} >
+    <Dialog open={isOpen} onOpenChange={onOpenChange} >
       <DialogContent className="max-w-[384px]!">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>

@@ -31,8 +31,7 @@ public class AuthController {
         ResponseEntity.BodyBuilder builder = ResponseEntity.ok();
 
         if (request.rememberMe()) {
-            String cookie = cookieUtils.createRefreshTokenCookie(tokenResponse.refreshToken());
-            builder.header(HttpHeaders.SET_COOKIE, cookie);
+            builder.header(HttpHeaders.SET_COOKIE, cookieUtils.createRefreshTokenCookie(tokenResponse.refreshToken()));
         }
 
         return builder.body(new LoginResponse(tokenResponse.accessToken()));
@@ -45,7 +44,8 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@CookieValue(name = "refresh_token") String refreshToken) {
-        return ResponseEntity.ok(service.logout(refreshToken));
+        String result = service.logout(refreshToken);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookieUtils.clearRefreshTokenCookie()).body(result);
     }
 
     @PostMapping("/refresh")

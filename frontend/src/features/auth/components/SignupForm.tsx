@@ -24,7 +24,7 @@ import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { type SignupFormValues, signupSchema } from "@/features/auth/schema.ts"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useSignup } from "@/features/auth/hooks/useSignup.ts"
+import { useSignup } from "@/features/auth/hooks/auth.queries.ts"
 
 function SignupForm() {
   const { control, handleSubmit } = useForm<SignupFormValues>({

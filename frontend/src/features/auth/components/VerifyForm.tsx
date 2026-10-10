@@ -14,8 +14,8 @@ import { IconArrowRight, IconUser } from "@tabler/icons-react"
 import { Button, buttonVariants } from "@/components/ui/button.tsx"
 import { Link } from "react-router"
 import { cn } from "@/lib/utils.ts"
-import { verifySchema, type VerifyFormValues } from "../schema"
-import { useVerify } from "../hooks/useVerify"
+import { type VerifyFormValues, verifySchema } from "../schema"
+import { useVerify } from "@/features/auth/hooks/auth.queries.ts"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 function VerifyForm() {

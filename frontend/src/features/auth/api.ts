@@ -1,21 +1,15 @@
 import { api } from "@/lib/api"
-
-// Sign up
-interface SignupRequest {
-  username: string
-  password: string
-  email: string
-}
+import type {
+  ChangePasswordRequest,
+  LoginRequest,
+  LoginResponse,
+  SignupRequest,
+  VerifyRequest,
+} from "@/features/auth/types.ts"
 
 async function signupRequest(payload: SignupRequest): Promise<string> {
   const { data } = await api.post("/auth/signup", payload)
   return data
-}
-
-// Verify account
-interface VerifyRequest {
-  email: string
-  otp: string
 }
 
 async function verifyRequest(payload: VerifyRequest): Promise<string> {
@@ -23,26 +17,9 @@ async function verifyRequest(payload: VerifyRequest): Promise<string> {
   return data
 }
 
-// Login
-interface LoginRequest {
-  email: string
-  password: string
-  rememberMe: boolean
-}
-
-interface LoginResponse {
-  accessToken: string
-}
-
 async function loginRequest(payload: LoginRequest): Promise<LoginResponse> {
   const { data } = await api.post<LoginResponse>("/auth/login", payload)
   return data
-}
-
-// Change password
-interface ChangePasswordRequest {
-  currentPassword: string
-  newPassword: string
 }
 
 async function changePasswordRequest(
@@ -54,9 +31,14 @@ async function changePasswordRequest(
 
 // Logout
 async function logoutRequest(): Promise<string> {
-  const { data } = await api.post("/logout")
+  const { data } = await api.post("/auth/logout")
   return data
 }
 
-export type { SignupRequest, LoginRequest, LoginResponse, ChangePasswordRequest, VerifyRequest }
-export { signupRequest, verifyRequest, loginRequest, changePasswordRequest, logoutRequest }
+export {
+  signupRequest,
+  verifyRequest,
+  loginRequest,
+  changePasswordRequest,
+  logoutRequest,
+}
