@@ -1,4 +1,5 @@
 import {
+  useBlockContact,
   useGetContacts,
   useRemoveContact,
 } from "@/features/chat/hooks/contact.queries.ts"
@@ -10,6 +11,7 @@ import {
   IconSearch,
   IconSend2,
   IconUser,
+  IconLock,
   IconUsersGroup,
 } from "@tabler/icons-react"
 import {
@@ -28,11 +30,18 @@ function ContactList() {
   const [searchInput, setSearchInput] = useState("")
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
   const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState(false)
+  const [isBlockDialogOpen, setIsBlockDialogOpen] = useState(false)
   const { mutate: removeMutation, isPending: isRemovePending } =
     useRemoveContact()
+  const { mutate: blockMutation, isPending: isBlockPending } = useBlockContact()
 
   function handleRemoveDialogOpen(userId: string) {
     setIsRemoveDialogOpen(true)
+    setSelectedUserId(userId)
+  }
+
+  function handleBlockDialogOpen(userId: string) {
+    setIsBlockDialogOpen(true)
     setSelectedUserId(userId)
   }
 
@@ -46,6 +55,20 @@ function ContactList() {
       },
       onError: (error) => {
         console.error("Failed to remove contact:", error)
+      },
+    })
+  }
+
+  function handleBlockContact() {
+    if (!selectedUserId) return
+
+    blockMutation(selectedUserId, {
+      onSuccess: () => {
+        setIsBlockDialogOpen(false)
+        setSelectedUserId(null)
+      },
+      onError: (error) => {
+        console.error("Failed to block contact:", error)
       },
     })
   }
@@ -147,6 +170,14 @@ function ContactList() {
                   <IconEraser />
                   Remove
                 </Button>
+                <Button
+                  variant="destructive"
+                  className="ml-2"
+                  onClick={() => handleBlockDialogOpen(contact.userId)}
+                >
+                  <IconLock />
+                  Block
+                </Button>
                 <Button className="ml-2">
                   <IconSend2 />
                   Chat
@@ -183,6 +214,23 @@ function ContactList() {
         cancelButton={<Button variant="outline">Cancel</Button>}
         isOpen={isRemoveDialogOpen}
         onOpenChange={setIsRemoveDialogOpen}
+      />
+
+      <ConfirmDialog
+        title="Block Contact"
+        message="Are you sure you want to block this person? They won't be able to send you messages. You can unblock them anytime in the Blocked users tab."
+        confirmButton={
+          <Button
+            variant="destructive"
+            onClick={handleBlockContact}
+            disabled={isBlockPending}
+          >
+            {isBlockPending ? "Blocking..." : "Block"}
+          </Button>
+        }
+        cancelButton={<Button variant="outline">Cancel</Button>}
+        isOpen={isBlockDialogOpen}
+        onOpenChange={setIsBlockDialogOpen}
       />
     </>
   )
