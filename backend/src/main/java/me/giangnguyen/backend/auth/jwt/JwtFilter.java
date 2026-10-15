@@ -6,10 +6,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import me.giangnguyen.backend.auth.exception.InvalidTokenException;
+import me.giangnguyen.backend.auth.exception.MissingTokenException;
 import me.giangnguyen.backend.user.User;
 import me.giangnguyen.backend.user.UserService;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -46,12 +46,12 @@ public class JwtFilter extends OncePerRequestFilter {
             String authHeader = request.getHeader("Authorization");
 
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                throw new InsufficientAuthenticationException("Missing bearer token");
+                throw new MissingTokenException("Missing bearer token");
             }
 
             String accessToken = authHeader.substring(7);
             if (!jwtService.isValidAccessToken(accessToken)) {
-                throw new IllegalArgumentException("Invalid token");
+                throw new InvalidTokenException("Invalid or expired token");
             }
 
             Claims claims = jwtService.extractAllClaims(accessToken);
@@ -59,7 +59,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             Optional<User> user = userService.findById(userId);
             if (user.isEmpty()) {
-                throw new BadCredentialsException("Invalid credentials");
+                throw new InvalidTokenException("Invalid or expired token");
             }
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId,
