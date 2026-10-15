@@ -1,6 +1,5 @@
 package me.giangnguyen.backend.auth;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.giangnguyen.backend.auth.dto.*;
 import me.giangnguyen.backend.auth.exception.EmailAlreadyExistsException;
@@ -19,6 +18,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.Duration;

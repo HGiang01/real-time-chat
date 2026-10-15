@@ -1,11 +1,10 @@
 package me.giangnguyen.backend.auth.refreshtoken;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import me.giangnguyen.backend.auth.exception.InvalidRefreshTokenException;
 import me.giangnguyen.backend.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -15,8 +14,7 @@ import java.util.Optional;
 public class RefreshTokenService {
     private final RefreshTokenRepository repository;
 
-    @Value("${app.security.jwt.max-refresh-token-per-user}")
-    private int maxRefreshTokenPerUser;
+    @Value("${app.security.jwt.max-refresh-token-per-user}") private int maxRefreshTokenPerUser;
 
     public Optional<RefreshToken> findByRefreshToken(String refreshToken) {
         return repository.findByRefreshToken(refreshToken);

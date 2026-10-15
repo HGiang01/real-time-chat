@@ -1,12 +1,12 @@
 package me.giangnguyen.backend.user;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.giangnguyen.backend.common.util.ImageUtils;
 import me.giangnguyen.backend.user.dto.GetMeResponse;
 import me.giangnguyen.backend.user.dto.UpdateProfileRequest;
 import me.giangnguyen.backend.user.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -95,7 +95,7 @@ public class UserService {
                                  user.get().getBio(),
                                  imageUtils.getThumbnailUrl(user.get().getAvatarUrl()));
     }
-    
+
     public void updateUserStatus(UUID userId, UserStatus userStatus) {
         repository.updateUserStatus(userId, userStatus);
     }
